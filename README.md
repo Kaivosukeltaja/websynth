@@ -3,7 +3,7 @@ Webaudio based polyphonic synthesizer with presets
 
 ## What's this thing?
 It's an experiment I built around 2016 with a goal of creating a modular synth using the Web Audio API. 
-The code was migrated to React in 2023. The project uses the [https://stuartmemo.com/qwerty-hancock/](Qwerty Hancock) keyboard by Stuart Memo, released under the MIT license.
+The code was migrated to React in 2023. The project uses the [Qwerty Hancock](https://stuartmemo.com/qwerty-hancock/) keyboard by Stuart Memo, released under the MIT license.
 
 ## How do I run it?
 1. Clone the repository to your computer: `git clone git@github.com:Kaivosukeltaja/websynth.git`
