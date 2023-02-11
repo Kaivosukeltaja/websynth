@@ -1,0 +1,30 @@
+.App {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.Keyboard {
+  margin: 2rem;
+}
+
+.Presets {
+  display: flex;
+}
+
+.Presets button {
+  margin: 1rem;
+  border: 0;
+  background: rgba(255,255,255,0.8);
+  color: #262b46;
+  font-weight: bold;
+  padding: 1rem 2rem;
+  border-radius: 999px;
+}
+
+.Instructions {
+  max-width: 40rem;
+  padding: 1rem;
+  line-height: 1.75;
+  background-color: rgba(255,255,255,0.1);
+}
