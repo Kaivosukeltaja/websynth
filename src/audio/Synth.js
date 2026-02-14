@@ -84,6 +84,11 @@ class Synth {
         if (this.oscgroups[note]) this.oscgroups[note].stop();
     }
 
+    allNotesOff() {
+        Object.keys(this.oscgroups).forEach((note) => this.oscgroups[note].stop());
+        this.oscgroups = {};
+    }
+
     loadReverbImpulse() {
         const irHallRequest = new XMLHttpRequest();
         irHallRequest.open('GET', 'irHall.ogg', true);

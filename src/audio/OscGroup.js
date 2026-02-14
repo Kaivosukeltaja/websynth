@@ -15,8 +15,13 @@ class OscGroup {
   // play(440, 5, 4) should give 5 oscillators with detuning -4, -2, 0, 2, 4
   play(freq, amount, detune, shape) {
     if (this.nodes.length !== 0) {
-      // Something's still playing, let's stop it first
-      this.stop();
+      // Retriggering same key (e.g. after octave change): stop previous oscillators immediately
+      // so we don't have two notes (old + new) playing through the same VCA.
+      this.nodes.forEach((node) => {
+        node.stop(0);
+        node.disconnect();
+      });
+      this.nodes = [];
     }
 
     const safeFreq = Number(freq);

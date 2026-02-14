@@ -4,6 +4,43 @@
   align-items: center;
 }
 
+.OctaveControl {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.OctaveLabel {
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.OctaveButtons {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.OctaveButton {
+  margin: 0;
+  border: 0;
+  background: rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: bold;
+  padding: 0.4rem 0.75rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.OctaveButton:hover {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.OctaveButton.active {
+  background: rgba(255, 255, 255, 0.9);
+  color: #262b46;
+}
+
 .Keyboard {
   margin: 2rem;
 }
