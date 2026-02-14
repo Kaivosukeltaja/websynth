@@ -81,7 +81,7 @@ class Synth {
     }
 
     keyUp(note) {
-        this.oscgroups[note].stop();
+        if (this.oscgroups[note]) this.oscgroups[note].stop();
     }
 
     loadReverbImpulse() {
@@ -89,10 +89,17 @@ class Synth {
         irHallRequest.open('GET', 'irHall.ogg', true);
         irHallRequest.responseType = 'arraybuffer';
         irHallRequest.onload = () => {
-            this.context.decodeAudioData(irHallRequest.response, (buffer) => {
-                this.reverb.buffer = this.reverbBuffer = buffer;
-            });
-        }
+            if (irHallRequest.status !== 200 || !irHallRequest.response) return;
+            this.context.decodeAudioData(irHallRequest.response)
+                .then((buffer) => {
+                    this.reverb.buffer = this.reverbBuffer = buffer;
+                })
+                .catch(() => {
+                    // Reverb IR failed to decode (missing file, unsupported codec in Brave, etc.)
+                    // Synth continues without reverb
+                });
+        };
+        irHallRequest.onerror = () => {};
         irHallRequest.send();
     }
       

@@ -11,27 +11,45 @@ const AudioContext = window.AudioContext || window.webkitAudioContext;
 function App() {
   const audioContextRef = useRef();
   const synthRef = useRef();
+  const audioReadyPromiseRef = useRef(null);
 
-  const keyUpHandler = (note) => {
-    synthRef.current.keyUp(note);
+  function ensureAudioReady() {
+    if (synthRef.current) return Promise.resolve();
+    if (audioReadyPromiseRef.current) return audioReadyPromiseRef.current;
+    let audioContext = audioContextRef.current;
+    if (!audioContext) {
+      audioContext = new AudioContext();
+      audioContextRef.current = audioContext;
+      audioContext.resume(); // must be called synchronously during user gesture (Brave/Chrome)
+    }
+    audioReadyPromiseRef.current = (async () => {
+      await audioContext.resume();
+      const synth = new Synth(audioContext);
+      synthRef.current = synth;
+      synth.loadPreset(presets[0]);
+    })();
+    return audioReadyPromiseRef.current;
   }
 
-  const keyDownHandler = (note, freq) => {
+  const keyUpHandler = (note) => {
+    if (synthRef.current) synthRef.current.keyUp(note);
+  }
+
+  const keyDownHandler = async (note, freq) => {
+    await ensureAudioReady();
     synthRef.current.keyDown(note, freq);
   }
 
   const loadPreset = (preset) => {
-    synthRef.current.loadPreset(preset);
+    ensureAudioReady().then(() => {
+      synthRef.current.loadPreset(preset);
+    });
   }
 
   useEffect(() => {
-    const audioContext = new AudioContext();
-    audioContextRef.current = audioContext;
-    const synth = new Synth(audioContext);
-    synthRef.current = synth;
-    synth.loadPreset(presets[0]);
-
-    return synth.disconnect;
+    return () => {
+      if (synthRef.current) synthRef.current.disconnect();
+    };
   }, [])
 
   return (
