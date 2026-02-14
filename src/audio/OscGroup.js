@@ -19,22 +19,29 @@ class OscGroup {
       this.stop();
     }
 
+    const safeFreq = Number(freq);
+    if (!Number.isFinite(safeFreq) || safeFreq <= 0) return;
+
+    const safeAmount = Math.max(1, Math.min(Number(amount) || 1, 32));
+    const safeDetune = Number(detune) || 0;
+    const safeShape = shape || 'sine';
+
     let panToggle = -1;
 
-    for (let i = 0; i < amount; i++) {
+    for (let i = 0; i < safeAmount; i++) {
       let oscDetune = 0;
-      if (detune !== 0) {
-        oscDetune = 0 - detune + i * (detune * 2 / (amount - 1));
+      if (safeAmount > 1 && safeDetune !== 0) {
+        oscDetune = 0 - safeDetune + i * (safeDetune * 2 / (safeAmount - 1));
       }
       let oscillator = this.context.createOscillator();
       let panner = this.context.createStereoPanner();
 
-      oscillator.type = shape;
-      oscillator.frequency.value = freq;
+      oscillator.type = safeShape;
+      oscillator.frequency.value = safeFreq;
       oscillator.detune.value = oscDetune;
       oscillator.connect(panner);
       panner.connect(this.vca.input);
-      if (amount > 1) {
+      if (safeAmount > 1) {
         panner.pan.value = panToggle;
         panToggle *= -1;
       } else {
